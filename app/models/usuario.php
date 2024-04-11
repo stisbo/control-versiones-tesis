@@ -148,4 +148,20 @@ class Usuario {
     $rows = $stmt->fetchAll();
     return $rows;
   }
+
+  public static function tieneTesis($idUsuario){
+    try {
+      $sql = "SELECT * FROM tblTesis WHERE idUsuario = :idUsuario";
+      $con = Database::getInstace();
+      $stmt = $con->prepare($sql);
+      $stmt->execute(['idUsuario' => $idUsuario]);
+      $row = $stmt->fetch();
+      if ($row) {
+        return $row['idTesis'];
+      }
+    } catch (\Throwable $th) {
+      var_dump($th);
+    }
+    return 0;
+  }
 }

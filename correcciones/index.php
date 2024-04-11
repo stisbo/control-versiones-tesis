@@ -1,28 +1,26 @@
 <?php
+use App\Models\Tesis;
+use App\Models\Usuario;
 if (isset($_COOKIE['user_obj'])) {
   $user = json_decode($_COOKIE['user_obj']);
 } else {
   header('Location: ../auth/login.php');
   die();
 }
-require_once('../app/models/revision.php');
 require_once('../app/config/database.php');
-require_once('../app/models/objetivoEspecifico.php');
-require_once('../app/models/tesis.php');
 require_once('../app/models/usuario.php');
+require_once('../app/models/tesis.php');
+$idTesis = Usuario::tieneTesis($user->idUsuario);
+if($idTesis == 0){
+  header('Location: ../tesis/nuevo.php');
+  die();
+}
 
-use App\Models\Tesis;
-use App\Models\Revision;
+$tesis = new Tesis($idTesis);
+$nombres_partes = $tesis->nombres_partes();
 
-$tesis = Tesis::usuario($user->idUsuario);
-
-$dataTitulo = Revision::revisionesTituloTesis($tesis->idTesis);
-$dataObjetivo = Revision::revisionesObjetivoTesis($tesis->idTesis);
-// var_dump($dataTitulo);
-// echo '<hr>';
-var_dump($dataObjetivo);
-$tituloCorregir = '';
-$objetivoCorregir = '';
+var_dump($tesis);
+var_dump($nombres_partes);
 ?>
 <!DOCTYPE html>
 <html lang="es">
