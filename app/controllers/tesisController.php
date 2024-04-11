@@ -29,4 +29,7 @@ class TesisController{
     }
     echo json_encode($response);
   }
+  public function getDataPart($data, $files){
+    
+  }
 }

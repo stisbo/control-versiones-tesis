@@ -32,3 +32,10 @@ async function corregirObjetivo(idTesis){
     showToast("Operación fallida", "Objetivo no corregido", "error")
   }
 }
+async function showData(a,b){
+  console.log(a, b)
+
+  $("#myTabContent").html(`<h1>${a} ----- ${b}</h1>`);
+
+  
+}

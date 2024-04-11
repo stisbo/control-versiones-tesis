@@ -13,7 +13,7 @@ class Cambio{
   }
   public function save(){
     try {
-      $sql = "INSERT INTO cambio (idParte, contenido) VALUES (?, ?)";
+      $sql = "INSERT INTO tblCambios (idParte, contenido) VALUES (?, ?)";
       $con = Database::getInstace();
       $stmt = $con->prepare($sql);
       $res = $stmt->execute([$this->idParte, $this->contenido]);

@@ -52,46 +52,60 @@ var_dump($nombres_partes);
               <div class="card shadow">
                 <div class="card-body">
                   <ul class="nav nav-tabs" id="myTab" role="tablist">
+                    <?php $i = 0; 
+                    foreach($nombres_partes as $nombre) : ?>
                     <li class="nav-item" role="presentation">
-                      <button class="nav-link active" id="home-tab" data-bs-toggle="tab" data-bs-target="#home-tab-pane" type="button" role="tab" aria-controls="home-tab-pane" aria-selected="true">TÍTULO</button>
+                      <button onclick="showData('<?=$nombre['nombre']?>',<?=$idTesis?>)" class="nav-link" id="<?=strtolower($nombre['nombre'])?>-tab" data-bs-toggle="tab" data-bs-target="#<?=strtolower($nombre['nombre'])?>-tab-pane" type="button" role="tab" aria-controls="<?=strtolower($nombre['nombre'])?>-tab-pane" aria-selected="true"><?=$nombre['nombre']?></button>
                     </li>
-                    <li class="nav-item" role="presentation">
+                    <?php 
+                    $i++;
+                    endforeach; 
+                    ?>
+                    <!-- <li class="nav-item" role="presentation">
                       <button class="nav-link" id="profile-tab" data-bs-toggle="tab" data-bs-target="#profile-tab-pane" type="button" role="tab" aria-controls="profile-tab-pane" aria-selected="false">OBJETIVO GENERAL</button>
                     </li>
                     <li class="nav-item" role="presentation">
                       <button class="nav-link" id="contact-tab" data-bs-toggle="tab" data-bs-target="#contact-tab-pane" type="button" role="tab" aria-controls="contact-tab-pane" aria-selected="false">OBJETIVOS ESPECÍFICOS</button>
-                    </li>
+                    </li> -->
                   </ul>
                   <div class="tab-content" id="myTabContent">
-                    <div class="tab-pane fade show active" id="home-tab-pane" role="tabpanel" aria-labelledby="home-tab" tabindex="0">
+                    <div class="alert alert-info">
+                      <h3><i class=" fa fa-solid fa-info-circle"></i> Selecciona alguna parte de tu tesis</h3>
+                    </div>
+                    <?php $i = 0;
+                    //foreach($nombres_partes as $nombre) : ?>
+                    <!-- <div class="tab-pane fade show active" id="home-tab-pane" role="tabpanel" aria-labelledby="home-tab" tabindex="0">
                       <div id="content">
-                        <ul class="timeline title-p">
+                        <ul class="timeline title-p"> -->
                           <?php 
-                          $existeComentario_title = null; 
-                          foreach ($dataTitulo as $titulo) : ?>
-                            <li class="event" data-date="<?= date('d/m/y H:i', strtotime($titulo['fecha'])) ?>">
+                          // $existeComentario_title = null; 
+                          // foreach ($dataTitulo as $titulo) : ?>
+                            <!-- <li class="event" data-date="<?= date('d/m/y H:i', strtotime($titulo['fecha'])) ?>">
                               <h3><?= $titulo['titulo'] ?></h3>
                               <p>Comentario: <?= ($titulo['comentario'] == null) ? 'Sin comentario aún' : $titulo['comentario'] ?></p>
-                            </li>
+                            </li> -->
                           <?php
-                            $existeComentario_title = $titulo['comentario'];
-                            $tituloCorregir = $titulo['titulo'] ?? '';
-                          endforeach;
+                            // $existeComentario_title = $titulo['comentario'];
+                            // $tituloCorregir = $titulo['titulo'] ?? '';
+                          // endforeach;
                           ?>
-                          <?php if($existeComentario_title != null): ?>
-                          <li class="event" data-date="Hora Actual">
+                          <?php //if($existeComentario_title != null): ?>
+                          <!-- <li class="event" data-date="Hora Actual">
                             <h3>¿Modificar título?</h3>
                             <div class="form-group">
                               <textarea class="form-control" placeholder="Nuevo titulo" id="correccion_titulo" style="height: 110px;resize:none;"><?= $tituloCorregir ?></textarea> 
-                              <!-- <label for="correccion_titulo">Título</label> -->
+
                             </div>
                             <button class="btn btn-sm btn-success float-end" onclick="corregirTitulo(<?=$tesis->idTesis?>)" type="button">Corregir</button>
-                          </li>
-                          <?php endif; ?>
-                        </ul>
+                          </li> -->
+                          <?php // endif; ?>
+                        <!-- </ul>
                       </div>
-                    </div>
-                    <div class="tab-pane fade" id="profile-tab-pane" role="tabpanel" aria-labelledby="profile-tab" tabindex="0">
+                    </div> -->
+                    <?php //endforeach; ?>
+
+
+                    <!-- <div class="tab-pane fade" id="profile-tab-pane" role="tabpanel" aria-labelledby="profile-tab" tabindex="0">
                       <div id="content-obj-gen">
                         <ul class="timeline objetivo-gen">
                           <?php
@@ -111,7 +125,6 @@ var_dump($nombres_partes);
                             <h3>¿Corregir Objetivo general?</h3>
                             <div class="form-group">
                               <textarea class="form-control" placeholder="Corregir objetivo" id="correccion_objetivo" style="height: 110px;resize:none;"><?= $objetivoCorregir ?></textarea> 
-                              <!-- <label for="correccion_objetivo">Objetivo general</label> -->
                             </div>
                             <button class="btn btn-sm btn-success float-end" onclick="corregirObjetivo(<?=$tesis->idTesis?>)" type="button">Corregir</button>
                           </li>
@@ -142,7 +155,7 @@ var_dump($nombres_partes);
                           </li>
                         </ul>
                       </div>
-                    </div>
+                    </div> -->
                   </div>
                 </div>
               </div>

@@ -79,7 +79,7 @@ class Parte{
       $res = $stmt->fetchAll();
       return $res;
     } catch (\Throwable $th) {
-      //throw $th;
+      var_dump($th);
     }
     return [];
   }
