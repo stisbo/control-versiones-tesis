@@ -50,18 +50,16 @@ if($tesis->idTesis != 0){
               <input type="hidden" name="id_usuario_envio" value="<?= $user->idUsuario ?>">
               <div class="card shadow">
                 <div class="card-body">
-
-                  <div class="row">
-                    
+                  <div class="row">                    
                     <div class="col-md-6">
                       <p class="fs-4 fw-bold"><i class="fa fa-solid fa-file"></i> Escribe el título</p>
                       <div class="form-floating mb-3">
-                        <textarea class="form-control validate[required,maxSize[250]]" placeholder="Titulo de la tesis" name="titulo" rows="4" style="height:135px;resize:none;"></textarea>
-                        <label for="">Título de la tesis</label>
+                        <textarea class="form-control validate[required,maxSize[250]]" placeholder="Titulo" name="titulo" rows="4" style="height:135px;resize:none;"></textarea>
+                        <label for="">Título</label>
                       </div>
                     </div>
                     <div class="col-md-6">
-                      <p class="fs-4 fw-bold"><i class="fa fa-solid fa-file"></i> Objetivo de tu tesis</p>
+                      <p class="fs-4 fw-bold"><i class="fa fa-solid fa-file"></i> Objetivo general</p>
                       <div class="form-floating mb-3">
                         <textarea class="form-control validate[required,maxSize[250]]" placeholder="Objetivo central" name="objetivo" rows="4" style="height:135px;resize:none;"></textarea>
                         <label for="">Objetivo General</label>

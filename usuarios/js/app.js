@@ -92,7 +92,7 @@ $(document).on('hide.bs.modal', '#modal_usuario_edit', () => {
 async function updateUser() {
   const data = $("#form_user_edit").serialize();
   const res = await $.ajax({
-    url: '../app/cusuario/update',
+    url: '../app/usuario/update',
     data,
     type: 'PUT',
     dataType: 'JSON'
@@ -124,7 +124,7 @@ $(document).on('show.bs.modal', '#modal_delete_usuario', (e) => {
 });
 async function deleteUser() {
   const res = await $.ajax({
-    url: '../app/cusuario/delete',
+    url: '../app/usuario/delete',
     type: 'DELETE',
     data: { idUsuario: $("#idUsuario_delete").val() },
     dataType: 'JSON'
@@ -157,7 +157,7 @@ $(document).on('show.bs.modal', '#modal_reset_pass', (e) => {
 
 async function user_reset_pass() {
   const res = await $.ajax({
-    url: '../app/cusuario/resetPass',
+    url: '../app/usuario/resetPass',
     type: 'PUT',
     data: { idUsuario: $("#idUsuario_reset_pass").val() },
     dataType: 'JSON'

@@ -42,4 +42,57 @@ class ObjetivoEspecifico{
     }
     return $res;
   }
+
+  public static function obtenerUltimaVersion($idTesis){
+    $data = [];
+    try {
+      $con = Database::getInstace();
+      $sql = "SELECT TOP 1 * FROM tblCambiosObjetivosEspecificos WHERE idTesis = $idTesis ORDER BY cambiado_en DESC;";
+      $stmt = $con->prepare($sql);
+      $stmt->execute();
+      $rows = $stmt->fetch();
+      if($rows){
+        for ($i=1; $i <= 5; $i++) { 
+          if(isset($rows["objetivoesp$i"])){
+            $data[] = $rows["objetivoesp$i"];
+          }
+        }
+      }else{
+        $sql2 = "SELECT * FROM tblObjetivosEspecificos WHERE idTesis = $idTesis";
+        $stmt2 = $con->prepare($sql2);
+        $stmt2->execute();
+        $i = 1;
+        foreach ($stmt2->fetchAll() as $obj) {
+          $data['objetivoesp'.$i] = $obj['objetivoEspecifico'];
+          $i++;
+        }
+      }
+    } catch (\Throwable $th) {
+      var_dump($th);
+    }
+    return $data;
+  }
+  public static function corregirObjetivoEspecifico($objetivos, $idTesis):bool{
+    try {
+      $con = Database::getInstace();
+      $i = 1;
+      $cadVals = '';
+      $cadNames = '';
+      foreach($objetivos as $objetivo){
+        $cadVals .= "'$objetivo',";
+        $cadNames .= "objetivoesp$i,";
+        $i++;
+      }
+      $cadVals = rtrim($cadVals,',');
+      $cadNames = rtrim($cadNames,',');
+      $sql = "INSERT INTO tblCambiosObjetivosEspecificos(idTesis, $cadNames) VALUES($idTesis, $cadVals);";
+      $stmt = $con->prepare($sql);
+      return $stmt->execute();
+    } catch (\Throwable $th) {
+      var_dump($th);
+    }
+    return false;
+  }
 }
+
+// 5 7 10 15

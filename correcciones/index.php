@@ -20,9 +20,19 @@ $dataTitulo = Revision::revisionesTituloTesis($tesis->idTesis);
 $dataObjetivo = Revision::revisionesObjetivoTesis($tesis->idTesis);
 // var_dump($dataTitulo);
 // echo '<hr>';
-var_dump($dataObjetivo);
+// var_dump($dataObjetivo);
 $tituloCorregir = '';
 $objetivoCorregir = '';
+
+$comentarioObjEspInicial = Revision::revisionIniciarObjEsp($tesis->idTesis);
+// var_dump($comentarioObjEspInicial);
+$revisionesObjEsp = [];
+if ($comentarioObjEspInicial != '') { // hacemos peticiones porque posiblemente tiene mas correcciones
+  $revisionesObjEsp = Revision::revisionesObjEspAll($tesis->idTesis);
+}
+$tesis->objetivosEspecificos();
+// var_dump($revisionesObjEsp);
+// var_dump($comentarioObjEspInicial);
 ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -68,8 +78,8 @@ $objetivoCorregir = '';
                     <div class="tab-pane fade show active" id="home-tab-pane" role="tabpanel" aria-labelledby="home-tab" tabindex="0">
                       <div id="content">
                         <ul class="timeline title-p">
-                          <?php 
-                          $existeComentario_title = null; 
+                          <?php
+                          $existeComentario_title = null;
                           foreach ($dataTitulo as $titulo) : ?>
                             <li class="event" data-date="<?= date('d/m/y H:i', strtotime($titulo['fecha'])) ?>">
                               <h3><?= $titulo['titulo'] ?></h3>
@@ -80,15 +90,15 @@ $objetivoCorregir = '';
                             $tituloCorregir = $titulo['titulo'] ?? '';
                           endforeach;
                           ?>
-                          <?php if($existeComentario_title != null): ?>
-                          <li class="event" data-date="Hora Actual">
-                            <h3>¿Modificar título?</h3>
-                            <div class="form-group">
-                              <textarea class="form-control" placeholder="Nuevo titulo" id="correccion_titulo" style="height: 110px;resize:none;"><?= $tituloCorregir ?></textarea> 
-                              <!-- <label for="correccion_titulo">Título</label> -->
-                            </div>
-                            <button class="btn btn-sm btn-success float-end" onclick="corregirTitulo(<?=$tesis->idTesis?>)" type="button">Corregir</button>
-                          </li>
+                          <?php if ($existeComentario_title != null) : ?>
+                            <li class="event" data-date="Hora Actual">
+                              <h3>¿Modificar título?</h3>
+                              <div class="form-group">
+                                <textarea class="form-control" placeholder="Nuevo titulo" id="correccion_titulo" style="height: 110px;resize:none;"><?= $tituloCorregir ?></textarea>
+                                <!-- <label for="correccion_titulo">Título</label> -->
+                              </div>
+                              <button class="btn btn-sm btn-success float-end" onclick="corregirTitulo(<?= $tesis->idTesis ?>)" type="button">Corregir</button>
+                            </li>
                           <?php endif; ?>
                         </ul>
                       </div>
@@ -97,26 +107,26 @@ $objetivoCorregir = '';
                       <div id="content-obj-gen">
                         <ul class="timeline objetivo-gen">
                           <?php
-                          $existeComentario = null; 
+                          $existeComentario = null;
                           foreach ($dataObjetivo as $objetivo) : ?>
-                          <li class="event" data-date="<?=date('d/m/y H:i',strtotime($objetivo['fecha']))?>">
-                            <h3><?= $objetivo['objetivo'] ?></h3>
-                            <p>Comentario: <?= ($objetivo['comentario'] == null) ? 'Sin comentario' : $objetivo['comentario'] ?></p>
-                          </li>
+                            <li class="event" data-date="<?= date('d/m/y H:i', strtotime($objetivo['fecha'])) ?>">
+                              <h3><?= $objetivo['objetivo'] ?></h3>
+                              <p>Comentario: <?= ($objetivo['comentario'] == null) ? 'Sin comentario' : $objetivo['comentario'] ?></p>
+                            </li>
                           <?php
-                          $existeComentario = $objetivo['comentario'];
-                          $objetivoCorregir = $objetivo['objetivo'] ?? '';
+                            $existeComentario = $objetivo['comentario'];
+                            $objetivoCorregir = $objetivo['objetivo'] ?? '';
                           endforeach;
                           ?>
-                          <?php if($existeComentario != null): ?>
-                          <li class="event" data-date="Hora actual">
-                            <h3>¿Corregir Objetivo general?</h3>
-                            <div class="form-group">
-                              <textarea class="form-control" placeholder="Corregir objetivo" id="correccion_objetivo" style="height: 110px;resize:none;"><?= $objetivoCorregir ?></textarea> 
-                              <!-- <label for="correccion_objetivo">Objetivo general</label> -->
-                            </div>
-                            <button class="btn btn-sm btn-success float-end" onclick="corregirObjetivo(<?=$tesis->idTesis?>)" type="button">Corregir</button>
-                          </li>
+                          <?php if ($existeComentario != null) : ?>
+                            <li class="event" data-date="Hora actual">
+                              <h3>¿Corregir Objetivo general?</h3>
+                              <div class="form-group">
+                                <textarea class="form-control" placeholder="Corregir objetivo" id="correccion_objetivo" style="height: 110px;resize:none;"><?= $objetivoCorregir ?></textarea>
+                                <!-- <label for="correccion_objetivo">Objetivo general</label> -->
+                              </div>
+                              <button class="btn btn-sm btn-success float-end" onclick="corregirObjetivo(<?= $tesis->idTesis ?>)" type="button">Corregir</button>
+                            </li>
                           <?php endif; ?>
                         </ul>
                       </div>
@@ -124,24 +134,39 @@ $objetivoCorregir = '';
                     <div class="tab-pane fade" id="contact-tab-pane" role="tabpanel" aria-labelledby="contact-tab" tabindex="0">
                       <div id="content">
                         <ul class="timeline objetivo-esp">
-                          <li class="event" data-date="12:30 - 1:00pm">
-                            <h3>Registration</h3>
-                            <p>Get here on time, it's first come first serve. Be late, get turned away.</p>
-                            <button type="button" class="btn btn-sm btn-secondary rounded-pill position-absolute top-0 end-0" data-bs-toggle="popover" data-bs-title="Comentario" data-bs-content="And here's some amazing content. It's very engaging. Right?"><i class="fa-solid fa-comment-dots"></i></button>
+                          <li class="event" data-date="<?=date('d/m/y H:i',strtotime($tesis->creado_en))?>">
+                            <h3>OBJETIVOS ESPECIFICOS</h3>
+                            <ol>
+                              <?php foreach ($tesis->objetivos_especifivos as $ode) : ?>
+                                <li><?= $ode->objetivoEspecifico ?></li>
+                              <?php endforeach; ?>
+                            </ol>
+                            <?php if(count($revisionesObjEsp) == 0): ?>
+                              <button type="button" class="btn btn-primary btn-sm rounded-pill position-absolute top-0 end-0" data-bs-toggle="modal" data-id="<?=$tesis->idTesis?>" data-bs-target="#modal_editar_objetivos" <?=($comentarioObjEspInicial == '')?'disabled':''?>><i class="fa fa-solid fa-pencil"></i></button>
+                            <?php endif; ?>
+                            <div class="alert alert-warning mt-2"><b>Comentario:</b> <?=$comentarioObjEspInicial?></div>
                           </li>
-                          <li class="event" data-date="2:30 - 4:00pm">
-                            <h3>Opening Ceremony</h3>
-                            <p>Get ready for an exciting event, this will kick off in amazing fashion with MOP &amp; Busta Rhymes as an opening show.</p>
-                            <button type="button" class="btn btn-sm btn-secondary rounded-pill position-absolute top-0 end-0" data-bs-toggle="popover" data-bs-title="Comentario" data-bs-content="And here's some amazing content. It's very engaging. Right?"><i class="fa-solid fa-comment-dots"></i></button>
+                          <?php
+                          $ultimoElemento = count($revisionesObjEsp);
+                          $mostrados = 1;                       
+                          foreach($revisionesObjEsp as $res) : ?>
+                          <li class="event" data-date="<?=date('d/m/y H:i', strtotime($res['cambiado_en']))?>">
+                            <h3>Cambios</h3>
+                            <ol>
+                              <?php for ($i = 1; $i <= 5; $i++) : ?>
+                                <?php if(isset($res["objetivoesp".$i])): ?>
+                                  <li><?= $res["objetivoesp".$i] ?></li>
+                                <?php endif;?>
+                              <?php endfor; ?>
+                            </ol>
+                            <?php if($ultimoElemento == $mostrados): ?>
+                              <button type="button" class="btn btn-primary btn-sm rounded-pill position-absolute top-0 end-0" data-bs-toggle="modal" data-id="<?=$tesis->idTesis?>" data-bs-target="#modal_editar_objetivos" <?=$res['comentario'] == null ? 'disabled' : '' ?>><i class="fa fa-solid fa-pencil"></i></button>
+                            <?php endif; ?>
+                            <div class="alert alert-warning mt-2"><b>Comentario:</b> <?=$res['comentario'] == null ? 'Sin comentar': $res['comentario']?></div>
                           </li>
-                          <li class="event" data-date="5:00 - 8:00pm">
-                            <h3>Main Event</h3>
-                            <p>This is where it all goes down. You will compete head to head with your friends and rivals. Get ready!</p>
-                          </li>
-                          <li class="event" data-date="8:30 - 9:30pm">
-                            <h3>Closing Ceremony</h3>
-                            <p>See how is the victor and who are the losers. The big stage is where the winners bask in their own glory.</p>
-                          </li>
+                          <?php 
+                          $mostrados++;
+                          endforeach; ?>
                         </ul>
                       </div>
                     </div>
@@ -154,7 +179,7 @@ $objetivoCorregir = '';
       </main>
     </div>
   </div><!-- fin contenedor -->
-
+  <?php include('./modalObjetivos.php') ?>
   <script src="../assets/bootstrap/js/bootstrap.popper.min.js"></script>
   <script src="../assets/bootstrap/js/bootstrap.bundle.min.js"></script>
   <script src="../js/scripts.js"></script>

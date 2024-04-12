@@ -34,6 +34,24 @@ async function guardarCommentObjetivo(){
       location.reload();
     }, 1660);
   }else{
-    showToast('Operación fallida (OBJETIVO)', 'Mensaje no enviado', 'error');
+    showToast('Operación fallida (OBJETIVO)', 'NO registrado', 'error');
+  }
+}
+
+async function guardarCommentObjEsp(idTarget, nuevo){
+  const valor = $("#obj_esp_comentario").val()
+  const res = await $.ajax({
+    url: '../app/revision/revisarObjEsp',
+    type: 'POST',
+    data: { idTarget, comentario: valor, nuevo },
+    dataType:'json'
+  })
+  if(res.status){
+    showToast('Operación exitosa (OBJETIVO ESP)', 'Mensaje enviado y registrado', 'success');
+    setTimeout(() => {
+      location.reload();
+    }, 1600);
+  }else{
+    showToast('Operación fallida (OBJETIVO ESP)', 'No registrado, intenete mas tarde', 'error');
   }
 }

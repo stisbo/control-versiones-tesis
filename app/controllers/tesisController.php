@@ -43,4 +43,21 @@ class TesisController{
     }
     echo json_encode($response);
   }
+  public function cargar_obj_esp($data, $files){
+    $valores = ObjetivoEspecifico::obtenerUltimaVersion($data['idTesis']);
+    $html = '<form id="form_edit_obj_esp"><input type="hidden" name="idTesis" id="id_tesis_objetivos" value="'.$data['idTesis'].'">
+    <input type="hidden" value="'.count($valores).'" id="cantidad_objetivos">';
+    $i = 0;
+    foreach($valores as $obj){
+      $i++;
+      $html .= '<div class="from-group mt-3">
+        <label>Objetivo específico '.$i.'</label>
+        <textarea class="form-control" name="obj_esp[]" style="height:110px;resize:none;">'.$obj.'</textarea>
+      </div>';
+    }
+    if($i < 5){
+      $html .= '<div id="contenedor_nuevos"></div><button class="btn btn-success mt-2" type="button" onclick="agregarNuevoObjEsp()" >Agregar otro Objetivo</button>';
+    }
+    echo $html.'</form>';
+  }
 }

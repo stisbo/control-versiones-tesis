@@ -14,7 +14,10 @@ use App\Models\Tesis;
 
 $tesis = Tesis::usuario($user->idUsuario);
 $tesis->objetivosEspecificos();
-
+if($tesis->idTesis == 0){
+  header('Location: ../tesis/nuevo.php');
+  die();
+}
 ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -42,6 +45,9 @@ $tesis->objetivosEspecificos();
 
         <div class="container-fluid px-4">
           <h1 class="mt-4">TESIS</h1>
+          <ol class="breadcrumb mb-4">
+            <li class="breadcrumb-item active">Versión Inicial</li>
+          </ol>
           <div class="buttons-head col-md-6 col-sm-12 mb-3">
             <button type="button" id="btn_volver_page" class="btn btn-secondary" onclick="history.back()"><i class="fa fa-arrow-left"></i> Volver </button>
           </div>

@@ -27,6 +27,13 @@ $dataObjetivo = Revision::revisionesObjetivoTesis($idTesis);
 $tesis = new Tesis($idTesis);
 $tesis->objetivosEspecificos();
 
+$comentarioObjEspInicial = Revision::revisionIniciarObjEsp($idTesis);
+
+$revisionesObjEsp = [];
+if($comentarioObjEspInicial != ''){// hacemos peticiones porque posiblemente tiene mas correcciones
+  $revisionesObjEsp = Revision::revisionesObjEspAll($idTesis);
+}
+// var_dump($revisionesObjEsp);
 
 ?>
 <!DOCTYPE html>
@@ -64,7 +71,7 @@ $tesis->objetivosEspecificos();
                       <button class="nav-link active" id="home-tab" data-bs-toggle="tab" data-bs-target="#home-tab-pane" type="button" role="tab" aria-controls="home-tab-pane" aria-selected="true">TÍTULO</button>
                     </li>
                     <li class="nav-item" role="presentation">
-                      <button class="nav-link" id="profile-tab" data-bs-toggle="tab" data-bs-target="#profile-tab-pane" type="button" role="tab" aria-controls="profile-tab-pane" aria-selected="false">OJBETIVO GENERAL</button>
+                      <button class="nav-link" id="profile-tab" data-bs-toggle="tab" data-bs-target="#profile-tab-pane" type="button" role="tab" aria-controls="profile-tab-pane" aria-selected="false">OBJETIVO GENERAL</button>
                     </li>
                     <li class="nav-item" role="presentation">
                       <button class="nav-link" id="contact-tab" data-bs-toggle="tab" data-bs-target="#contact-tab-pane" type="button" role="tab" aria-controls="contact-tab-pane" aria-selected="false">OBJETIVOS ESPECÍFICOS</button>
@@ -125,21 +132,47 @@ $tesis->objetivosEspecificos();
                               <li><?=$ode->objetivoEspecifico?></li>
                               <?php endforeach; ?> 
                             </ol>
-                            <button type="button" class="btn btn-sm btn-secondary rounded-pill position-absolute top-0 end-0" data-bs-toggle="popover" data-bs-title="Comentario" data-bs-content="And here's some amazing content. It's very engaging. Right?"><i class="fa-solid fa-comment-dots"></i></button>
+                            <button type="button" class="btn btn-sm btn-secondary rounded-pill position-absolute top-0 end-0" data-bs-toggle="popover" data-bs-title="Comentario" data-bs-content="<?=($comentarioObjEspInicial == '') ? 'Sin Comentario':$comentarioObjEspInicial ?>"><i class="fa-solid fa-comment-dots"></i></button>
                           </li>
-                          <!-- <li class="event" data-date="2:30 - 4:00pm">
-                            <h3>Opening Ceremony</h3>
-                            <p>Get ready for an exciting event, this will kick off in amazing fashion with MOP &amp; Busta Rhymes as an opening show.</p>
-                            <button type="button" class="btn btn-sm btn-secondary rounded-pill position-absolute top-0 end-0" data-bs-toggle="popover" data-bs-title="Comentario" data-bs-content="And here's some amazing content. It's very engaging. Right?"><i class="fa-solid fa-comment-dots"></i></button>
+                          <?php
+                          $comentarioRevision = null;
+                          $idTargetObjEsp = $idTesis;
+                          $nuevo = 'SI';
+                          foreach($revisionesObjEsp as $rev):
+                            // var_dump($rev);
+                          ?>
+                          <li class="event" data-date="<?=date('d/m/y H:i', strtotime($rev['cambiado_en']))?>">
+                          <h3>Cambios</h3>
+                            <ol>
+                              <?php for ($i = 1; $i <= 5; $i++) : ?>
+                                <?php if(isset($rev["objetivoesp".$i])): ?>
+                                  <li><?= $rev["objetivoesp".$i] ?></li>
+                                <?php endif;?>
+                              <?php endfor; ?>
+                            </ol>
+                            <?php if($rev['comentario'] != null): ?>
+                            <button type="button" class="btn btn-sm btn-secondary rounded-pill position-absolute top-0 end-0" data-bs-toggle="popover" data-bs-title="Comentario" data-bs-content="<?=$rev['comentario']?>"><i class="fa-solid fa-comment-dots"></i></button>
+                            <?php endif; ?>
                           </li>
-                          <li class="event" data-date="5:00 - 8:00pm">
-                            <h3>Main Event</h3>
-                            <p>This is where it all goes down. You will compete head to head with your friends and rivals. Get ready!</p>
-                          </li>
-                          <li class="event" data-date="8:30 - 9:30pm">
+                          <?php 
+                          $comentarioRevision = $rev['comentario'];
+                          $idTargetObjEsp = $rev['idCambiosOE'];
+                          $nuevo = 'NO';
+                          endforeach; ?>
+                          <!--<li class="event" data-date="8:30 - 9:30pm">
                             <h3>Closing Ceremony</h3>
                             <p>See how is the victor and who are the losers. The big stage is where the winners bask in their own glory.</p>
                           </li> -->
+                          <?php if($comentarioRevision == null): ?>
+                          <li class="event" data-date="">
+                            <h3>¿Agregar comentarios?</h3>
+                            <div class="input-group">
+                              <span class="input-group-text" style="background-color:#ebeff3"><i class="fa fa-solid fa-lg fa-comment-dots"></i></span>
+                              <textarea class="form-control" id="obj_esp_comentario" style="height:130px;resize:none;" aria-label="With textarea" placeholder="Comentarios..."></textarea>
+                            </div>
+                            <button class="btn btn-sm btn-success float-end" type="button" onclick="guardarCommentObjEsp(<?=$idTargetObjEsp?>,'<?=$nuevo?>')">Terminar</button>
+                          </li>
+                          <?php endif; ?>
                         </ul>
                       </div>
                     </div>

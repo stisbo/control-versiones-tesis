@@ -51,7 +51,7 @@ if (isset($_COOKIE['user_obj'])) {
             <div class="col-xl-3 col-md-6">
               <div class="card bg-success text-white mb-4 shadow">
                 <div class="card-body">
-                  <h4><i class="fa fa-eye"></i> Ver mi tesis</h4>
+                  <h4><i class="fa fa-eye"></i> Version Inicial</h4>
                 </div>
                 <div class="card-footer d-flex align-items-center justify-content-between">
                   <a class="text-white stretched-link" href="../tesis/ver.php">Ver</a>
