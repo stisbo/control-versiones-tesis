@@ -12,6 +12,7 @@ class Usuario {
   public string $password;
   public string $color; // color de menu
   public string $creado_en;
+  public string $celular;
   public function __construct($idUsuario = null) {
     if ($idUsuario != null) {
       $con = Database::getInstace();
@@ -38,6 +39,7 @@ class Usuario {
     $this->password = '';
     $this->color = '#212529';
     $this->creado_en = '';
+    $this->celular = '';
   }
 
 
@@ -68,8 +70,8 @@ class Usuario {
     try {
       $con = Database::getInstace();
       if ($this->idUsuario == 0) { //insert
-        $sql = "INSERT INTO tblUsuario (usuario, nombre, apellidos, rol, color, password) VALUES (:usuario, :nombre, :apellidos, :rol, :color, :password)";
-        $params = ['usuario' => $this->usuario, 'nombre' => $this->nombre, 'rol' => $this->rol, 'color' => '#212529', 'password' => $this->password, 'apellidos' => $this->apellidos];
+        $sql = "INSERT INTO tblUsuario (usuario, nombre, apellidos, rol, color, password, celular) VALUES (:usuario, :nombre, :apellidos, :rol, :color, :password, :celular)";
+        $params = ['usuario' => $this->usuario, 'nombre' => $this->nombre, 'rol' => $this->rol, 'color' => '#212529', 'password' => $this->password, 'apellidos' => $this->apellidos, 'celular' => $this->celular];
         $stmt = $con->prepare($sql);
         $res = $stmt->execute($params);
         if ($res) {
@@ -77,8 +79,8 @@ class Usuario {
           $res = $this->idUsuario;
         }
       } else { // update
-        $sql = "UPDATE tblUsuario SET usuario = :usuario, nombre = :nombre, apellidos = :apellidos, rol = :rol, color = :color WHERE idUsuario = :idUsuario";
-        $params = ['usuario' => $this->usuario, 'nombre' => $this->nombre, 'apellidos'=> $this->apellidos, 'rol' => $this->rol, 'color' => $this->color, 'idUsuario' => $this->idUsuario];
+        $sql = "UPDATE tblUsuario SET usuario = :usuario, nombre = :nombre, apellidos = :apellidos, rol = :rol, color = :color, celular = :celular WHERE idUsuario = :idUsuario";
+        $params = ['usuario' => $this->usuario, 'nombre' => $this->nombre, 'apellidos'=> $this->apellidos, 'rol' => $this->rol, 'color' => $this->color, 'celular' => $this->celular, 'idUsuario' => $this->idUsuario];
         $stmt = $con->prepare($sql);
         $stmt->execute($params);
         $res = 1;
@@ -99,6 +101,7 @@ class Usuario {
     $this->password = $row['password'];
     $this->apellidos = $row['apellidos'];
     $this->creado_en = $row['creado_en'];
+    $this->celular = $row['celular'];
   }
   public function delete() {
     try {

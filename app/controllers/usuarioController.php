@@ -15,8 +15,9 @@ class UsuarioController {
       return;
     }
     $usuario->usuario = $data['usuario'];
-    $usuario->password = hash('sha256', $data['usuario']);
+    $usuario->password = hash('sha256', $data['password']);
     $usuario->nombre = $data['name'];
+    $usuario->celular = $data['celular'] ?? '0';
     $usuario->apellidos = $data['lastname'];
     $usuario->rol = 'USER';
     $res = $usuario->save();

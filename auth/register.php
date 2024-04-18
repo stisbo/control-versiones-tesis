@@ -14,8 +14,10 @@ if (isset($_COOKIE['user_obj'])) {
   <title>Registro </title>
   <link href="../css/styles.css" rel="stylesheet" />
   <link rel="stylesheet" href="../assets/jquery/jqueryToast.min.css">
+  <link rel="stylesheet" href="../assets/jquery/jqueryValidationEngine.css">
   <script src="../assets/jquery/jquery.js"></script>
   <script src="../assets/jquery/jqueryToast.min.js"></script>
+  <script src="../assets/jquery/jqueryValidation.min.js"></script>
   <script src="../assets/fontawesome/fontawesome6.min.js" crossorigin="anonymous"></script>
 </head>
 
@@ -36,7 +38,7 @@ if (isset($_COOKIE['user_obj'])) {
                     <div class="row mb-3">
                       <div class="col-md-12">
                         <div class="form-floating mb-3 mb-md-0">
-                          <input class="form-control" id="email" type="email" placeholder="Ingresa tu correo" name="usuario" />
+                          <input class="form-control validate[required,custom[email]]" id="email" type="email" placeholder="Ingresa tu correo" name="usuario" />
                           <label for="email">Correo electrónico</label>
                         </div>
                       </div>
@@ -44,7 +46,7 @@ if (isset($_COOKIE['user_obj'])) {
                     <div class="row mb-3">
                       <div class="col-md-12">
                         <div class="form-floating mb-3 mb-md-0">
-                          <input class="form-control" id="nombre" type="text" placeholder="Ingresa tu nombre" name="name" max="70"/>
+                          <input class="form-control validate[required]" id="nombre" type="text" placeholder="Ingresa tu nombre" name="name" max="70"/>
                           <label for="nombre">Nombre (s) </label>
                         </div>
                       </div>
@@ -54,6 +56,14 @@ if (isset($_COOKIE['user_obj'])) {
                         <div class="form-floating mb-3 mb-md-0">
                           <input class="form-control" id="apellido" type="text" placeholder="Ingresa tu apellidos" name="lastname" max="80"/>
                           <label for="apellido">Apellidos</label>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="row mb-3">
+                      <div class="col-md-12">
+                        <div class="form-floating mb-3 mb-md-0">
+                          <input class="form-control validate[custom[celular]]" type="text" placeholder="Ingresa tu apellidos" name="celular" max="8"/>
+                          <label for="celular"># Celular</label>
                         </div>
                       </div>
                     </div>
@@ -88,9 +98,30 @@ if (isset($_COOKIE['user_obj'])) {
   </div>
   <script src="../assets/bootstrap/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
   <script src="../js/scripts.js"></script>
+  <script src="../assets/jquery/jqueryValidationEngine-es.min.js"></script>
+  <script src="../assets/jquery/jqueryValidation.min.js"></script>
   <script>
-    $(document).on('submit', '#form_register', async (e) => {
-      e.preventDefault();
+    $("#form_register").validationEngine({
+      promptPosition: "topLeft",
+      scroll: false,
+      focusFirstField: false,
+      onValidationComplete: function (form, status) {
+        console.log('enviar', form, status)
+        if (status)
+          enviarForm(form)
+        else{
+          $.toast({
+            heading: 'Campos no válidos',
+            text: 'Verifique que los datos proporcionados sean correctos',
+            showHideTransition: 'slide',
+            icon: 'error',
+          });
+        }
+      }
+    });
+
+    async function enviarForm(form) {
+      // e.preventDefault();
       const data = $("#form_register").serialize();
       console.log(data)
       const res = await $.ajax({
@@ -112,7 +143,8 @@ if (isset($_COOKIE['user_obj'])) {
       } else {
         $('#messages').html(`<div class="alert alert-danger">${res.message}</div>`)
       }
-    })
+    }
+
     $('#form_register').on('input', () => {
       $("#messages").html('')
     })
