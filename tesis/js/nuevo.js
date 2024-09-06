@@ -1,5 +1,6 @@
 var correlativo = 0;
 var contenidoObj = {};
+var imagen = false;
 $(document).on('click', '#btn_add_obj', agregarObjetivo)
 $(document).on('submit', '#form_nuevo', enviarDatos);
 
@@ -41,8 +42,8 @@ function deleteobj(id){
 
 async function enviarDatos(e){
   e.preventDefault();
-  const data = $(e.target).serializeArray();
-  console.log(data)
+  // const data = $(e.target).serializeArray();
+  // console.log(data)
   if(Object.keys(contenidoObj).length <= 2){
     $.toast({
       heading: 'Error',
@@ -52,23 +53,38 @@ async function enviarDatos(e){
     });
     return;
   }
-  data.push({name: 'o_especificos', value: JSON.stringify(contenidoObj)})
-  console.log(data)
-  const res = await $.ajax({
-    url: '../app/tesis/create',
-    type:'POST',
-    data: data,
-    dataType: 'json'
-  });
-  if(res.status ){
-    $.toast({
-      heading: 'Exito',
-      text: 'Tesis creada',
-      showHideTransition: 'slide',
-      icon: 'success'
-    });
-    setTimeout(() => {
-      window.location.href = './ver.php'
-    }, 2000);
+  const tipo = $("#toggles").is(':checked') ? 'TESIS' : 'PROYECTO';
+  // data.push({name: 'o_especificos', value: JSON.stringify(contenidoObj), tipo })
+  // console.log(data)
+  const form_data = new FormData(e.target);
+  form_data.append('o_especificos', JSON.stringify(contenidoObj))
+  form_data.append('tipo', tipo)
+  var input_image = document.getElementById('file_geografico');
+  if (input_image.files && input_image.files[0]) {
+    form_data.append('imagen', input_image.files[0]);
   }
+  for (const pair of form_data.entries()) {
+    console.log(pair[0]+ ', ' + pair[1]); 
+  }
+
+  // const res = await $.ajax({
+  //   url: '../app/tesis/create',
+  //   type:'POST',
+  //   data: data,
+  //   dataType: 'json'
+  // });
+  // if(res.status ){
+  //   $.toast({
+  //     heading: 'Exito',
+  //     text: 'Tesis creada',
+  //     showHideTransition: 'slide',
+  //     icon: 'success'
+  //   });
+  //   setTimeout(() => {
+  //     window.location.href = './ver.php'
+  //   }, 2000);
+  // }
 }
+$(document).on('change', '#toggles', (e) => {
+  $("#j_ciencia").toggleClass('d-none')
+})

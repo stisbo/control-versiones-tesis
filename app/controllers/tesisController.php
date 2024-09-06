@@ -4,6 +4,7 @@ namespace App\Controllers;
 
 use App\Models\Tesis;
 use App\Models\ObjetivoEspecifico;
+use App\Resources\View;
 
 class TesisController{
   public function create($data, $files){
@@ -16,6 +17,9 @@ class TesisController{
       $tesis->objetivo = $data['objetivo'];
       $tesis->palabrasClave = $data['palabrasClave'] ?? '';
       $tesis->idUsuario = $user->idUsuario;
+      $tesis->problema = $data['problema'];
+      $tesis->formulacion_problema = $data['formulacion'];
+      $tesis->tipo = $data['tipo'];
       if($tesis->insert() > 0){
         $obj_especificos = json_decode($data["o_especificos"]);
         $c = 0;
@@ -59,5 +63,9 @@ class TesisController{
       $html .= '<div id="contenedor_nuevos"></div><button class="btn btn-success mt-2" type="button" onclick="agregarNuevoObjEsp()" >Agregar otro Objetivo</button>';
     }
     echo $html.'</form>';
+  }
+  public function objetivos_esp($query){
+    $objetivos = ObjetivoEspecifico::getByIdTesis($query['idTesis']);
+    echo View::render('content_obj', ['objetivos' => $objetivos]);
   }
 }

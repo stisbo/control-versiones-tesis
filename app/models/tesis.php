@@ -18,6 +18,10 @@ class Tesis{
   public string $estado_revisado;
 
   public array $objetivos_especifivos = [];
+  public string $problema;
+  public string $formulacion_problema;
+  public string $limites;
+  public string $tipo;
 
   public function __construct($idTesis = 0) {
     if ($idTesis == 0) {
@@ -46,6 +50,10 @@ class Tesis{
     $this->usuario = new Usuario();
     $this->creado_en = '';
     $this->estado_revisado = '';
+    $this->problema = '';
+    $this->formulacion_problema = '';
+    $this->limites = '';
+    $this->tipo = '';
   }
 
   public function load($row){
@@ -58,6 +66,10 @@ class Tesis{
     $this->creado_en = $row['creado_en'];
     $this->estado_revisado = $row['estado_revisado'];
     $this->usuario = new Usuario($this->idUsuario);
+    $this->problema = $row['problema'] ?? '';
+    $this->formulacion_problema = $row['formulacion_problema'] ?? '';
+    $this->limites = $row['limites'] ?? '';
+    $this->tipo = $row['tipo'] ?? '';
   }
 
   public function update($anterior) {
@@ -87,7 +99,7 @@ class Tesis{
 
   public function insert(){
     try {
-      $sql = "INSERT INTO tblTesis (titulo, objetivo, palabrasClave, gestion, idUsuario) VALUES (:titulo, :objetivo, :palabrasClave, :gestion, :idUsuario)";
+      $sql = "INSERT INTO tblTesis (titulo, objetivo, palabrasClave, gestion, idUsuario, problema,formulacion_problema, limites, tipo) VALUES (:titulo, :objetivo, :palabrasClave, :gestion, :idUsuario, :problema, :formulacion, :limites, :tipo);";
       $con = Database::getInstace();
       $stmt = $con->prepare($sql);
       $params = [
@@ -95,7 +107,11 @@ class Tesis{
         'objetivo' => $this->objetivo,
         'palabrasClave' => $this->palabrasClave,
         'gestion' => $this->gestion,
-        'idUsuario' => $this->idUsuario
+        'idUsuario' => $this->idUsuario,
+        'problema' => $this->problema,
+        'formulacion' => $this->formulacion_problema,
+        'limites' => $this->limites,
+        'tipo' => $this->tipo,
       ];
       $res = $stmt->execute($params);
       if ($res) {
@@ -163,4 +179,16 @@ class Tesis{
     }
     return $tesis;
   }
+  public static function revisado_update($idTesis){
+    try {
+      $con = Database::getInstace();
+      $sql = "UPDATE tblTesis SET estado_revisado = 'SI' WHERE idTesis = $idTesis";
+      $stmt = $con->prepare($sql);
+      return $stmt->execute();
+    } catch (\Throwable $th) {
+      //throw $th;
+    }
+    return false;
+  }
+
 }

@@ -1,4 +1,8 @@
 <?php
+session_start();
+date_default_timezone_set('America/La_Paz');
+require_once 'config/database.php';
+require_once 'resources/render_view.php';
 $onlyModels = ['objetivoEspecifico'];
 foreach ($onlyModels as $model) {
   require_once("models/" . $model . ".php");

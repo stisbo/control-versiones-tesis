@@ -16,6 +16,7 @@ class RevisionController{
       $revision->columna_tabla = 'titulo';
       $revision->tabla_referencia = 'tblTesis';
       $revision->id_tabla_referencia = $data['idTarget']; // idTesis
+      Tesis::revisado_update($data['idTarget']);
     }
     if($revision->save() > 0){
       echo json_encode(array('status'=> true, 'message' => 'Revisión creado correctamente'));
@@ -31,11 +32,12 @@ class RevisionController{
       $revision->columna_tabla = 'valor';
       $revision->tabla_referencia = 'tblCorrecciones';
       $revision->id_tabla_referencia = $data['idTarget']; // idCorreccion
-    }else{ // la revision se hace al titulo original
+    } else { // la revision se hace al titulo original
       $revision->comentario = $data['comentario'];
       $revision->columna_tabla = 'objetivo';
       $revision->tabla_referencia = 'tblTesis';
       $revision->id_tabla_referencia = $data['idTarget']; //idTesis
+      Tesis::revisado_update($data['idTarget']);
     }
     if($revision->save() > 0){
       echo json_encode(array('status'=> true, 'message' => 'Revisión creada correctamente'));
@@ -55,14 +57,6 @@ class RevisionController{
     }else{
       echo json_encode(array('status'=> false, 'message' => 'No se pudo crear la revisión'));
     }
-  }
-
-
-
-  public static function actualizarEstadoTesis(Tesis $tesis){
-    $tesisClone = clone $tesis;
-    $tesis->estado_revisado = 'SI';
-    return $tesis->update($tesisClone);
   }
 }
 

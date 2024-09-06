@@ -1,14 +1,19 @@
 <?php
 if (isset($_COOKIE['user_obj'])) {
   $user = json_decode($_COOKIE['user_obj']);
-  if ($user->rol != 'ADMIN') {header('Location: ../dash/');die();}
+  if ($user->rol != 'ADMIN') {
+    header('Location: ../dash/');
+    die();
+  }
 } else {
   header('Location: ../auth/login.php');
   die();
 }
 require_once('../app/config/database.php');
 require_once('../app/models/tesis.php');
+
 use App\Models\Tesis;
+
 $data = Tesis::getAll();
 // var_dump($data);
 
@@ -36,7 +41,7 @@ $data = Tesis::getAll();
     <?php include("../common/sidebar.php"); ?>
     <div id="layoutSidenav_content">
       <main>
-      <div class="container-fluid px-4">
+        <div class="container-fluid px-4">
           <div class="mt-4">
             <h1>Tesis</h1>
           </div>
@@ -44,7 +49,7 @@ $data = Tesis::getAll();
             <div class="card shadow">
               <div class="card-header">
                 <h4>
-                  <i class="fa fa-table"></i> Listado 
+                  <i class="fa fa-table"></i> Listado
                 </h4>
               </div>
               <div class="card-body">
@@ -61,20 +66,20 @@ $data = Tesis::getAll();
                       </tr>
                     </thead>
                     <tbody id="t_body_envios">
-                      <?php foreach ($data as $tesis): ?>
-                      <tr>
-                        <td><?=$tesis['idTesis']?></td>
-                        <td><?=strtoupper($tesis['titulo'])?></td>
-                        <td><?=$tesis['objetivo']?></td>
-                        <td><?=$tesis['nombre'].' '.$tesis['apellidos']?></td>
-                        <td><?=date('d/m/Y H:i',strtotime($tesis['creado_en']))?></td>
-                        <td>
-                          <div class="d-flex justify-content-between flex-wrap">
-                            <a href="../correcciones/corregir.php?teid=<?=$tesis['idTesis']?>" class="btn btn-secondary" title="REVISAR"><i class="fa fa-solid fa-pencil"></i></a>
-                            <button class="btn btn-primary" title="Ver objetivos" type="button"><i class="fa fa-solid fa-eye"></i></button>
-                          </div>
-                        </td>
-                      </tr>
+                      <?php foreach ($data as $tesis) : ?>
+                        <tr>
+                          <td><?= $tesis['idTesis'] ?></td>
+                          <td><?= strtoupper($tesis['titulo']) ?></td>
+                          <td><?= $tesis['objetivo'] ?></td>
+                          <td><?= $tesis['nombre'] . ' ' . $tesis['apellidos'] ?></td>
+                          <td><?= date('d/m/Y H:i', strtotime($tesis['creado_en'])) ?></td>
+                          <td>
+                            <div class="d-flex justify-content-between flex-wrap">
+                              <a href="../correcciones/corregir.php?teid=<?= $tesis['idTesis'] ?>" class="btn btn-secondary" title="REVISAR"><i class="fa fa-solid fa-pencil"></i></a>
+                              <button class="btn btn-primary" title="Ver objetivos" type="button" data-bs-toggle="modal" data-bs-target="#modal_objetivos" data-id="<?=$tesis['idTesis']?>"><i class="fa fa-solid fa-eye"></i></button>
+                            </div>
+                          </td>
+                        </tr>
                       <?php endforeach; ?>
                     </tbody>
                   </table>
@@ -87,6 +92,21 @@ $data = Tesis::getAll();
     </div>
   </div><!-- fin contenedor -->
 
+  <!-- Modal ver objetivos especificos -->
+  <div class="modal fade" id="modal_objetivos" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header bg-primary text-white">
+          <h1 class="modal-title fs-5">Objetivos específicos</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body" id="objetivos_content"></div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+        </div>
+      </div>
+    </div>
+  </div>
   <script src="../assets/bootstrap/js/bootstrap.bundle.min.js"></script>
   <script src="../js/scripts.js"></script>
   <script src="../assets/datatables/datatables.jquery.min.js"></script>

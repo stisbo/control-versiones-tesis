@@ -101,7 +101,7 @@ class Usuario {
     $this->password = $row['password'];
     $this->apellidos = $row['apellidos'];
     $this->creado_en = $row['creado_en'];
-    $this->celular = $row['celular'];
+    $this->celular = $row['celular'] ?? '000';
   }
   public function delete() {
     try {

@@ -2,10 +2,6 @@
 
 namespace App;
 
-session_start();
-date_default_timezone_set('America/La_Paz');
-require_once 'config/database.php';
-
 include_once 'autoload.php';
 $url = isset($_GET['url']) ? $_GET['url'] : '';
 
